@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     tools {
         gradle 'gradle-7.6.1'
         jdk 'jdk-17'
@@ -63,7 +64,7 @@ pipeline {
                 dir('deploy_guest_aws') {
                     // 소스파일 체크아웃
                     git branch: 'main',
-                        url: "${GITHUB_SOURCE_URL}"
+                    url: "${GITHUB_SOURCE_URL}"
 
                     // gradlew 실행권한 부여 (윈도우 → 리눅스 퍼미션 문제)
                     sh "chmod +x ./gradlew"
@@ -73,7 +74,6 @@ pipeline {
                 }
             }
         }
-
         /***********************
          * 2. Docker 이미지 빌드 & DockerHub 푸시
          ***********************/
@@ -120,15 +120,19 @@ pipeline {
                                 rm -rf "${params.EC2_APP_DIR}"
                                 mkdir -p "${params.EC2_APP_DIR}"
                                 cd "${params.EC2_APP_DIR}"
-
-                                git clone https://github.com/${params.GITHUB_USERNAME}/deploy_guest_aws.git .
+                                git clone https://github.com/${params.GITHUB_USERNAME}/deploy_guest_aws_script.git .
                             else
-                                echo "[EC2] 기존 git 레포 존재 → git pull"
+                                echo "[EC2] 디렉토리 또는 git 레포 없음 → 새로 clone"
+                                rm -rf "${params.EC2_APP_DIR}"
+                                mkdir -p "${params.EC2_APP_DIR}"
                                 cd "${params.EC2_APP_DIR}"
-                                git status || true
-                                git fetch origin
-                                git checkout ${params.GIT_BRANCH}
-                                git pull origin ${params.GIT_BRANCH}
+                                git clone https://github.com/${params.GITHUB_USERNAME}/deploy_guest_aws_script.git .
+                                
+                                #echo "[EC2] 기존 git 레포 존재 → clean fetch & reset"
+                                #cd "${params.EC2_APP_DIR}"
+                                #git fetch --all
+                                #git reset --hard origin/${params.GIT_BRANCH}
+                                #git clean -fd
                             fi
 
                             echo "[EC2] 현재 디렉토리:"
@@ -148,7 +152,7 @@ pipeline {
                             ${params.COMPOSE_CMD} -f ${params.COMPOSE_FILE} up -d
 
                             echo "[EC2] 컨테이너 상태 확인"
-                            ${params.COMPOSE_CMD} ps
+                            ${params.COMPOSE_CMD} -f ${params.COMPOSE_FILE} ps
                         '
                     """
                 }
