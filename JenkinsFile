@@ -113,28 +113,11 @@ pipeline {
                             set -e
 
                             echo "[EC2] 배포 디렉토리: ${params.EC2_APP_DIR}"
-
-                            # 1) 디렉토리 / 레포 존재 여부 확인
-                            if [ ! -d "${params.EC2_APP_DIR}/.git" ]; then
-                                echo "[EC2] 디렉토리 또는 git 레포 없음 → 새로 clone"
-                                rm -rf "${params.EC2_APP_DIR}"
-                                mkdir -p "${params.EC2_APP_DIR}"
-                                cd "${params.EC2_APP_DIR}"
-                                git clone https://github.com/${params.GITHUB_USERNAME}/deploy_guest_aws_script.git .
-                            else
-                                echo "[EC2] 디렉토리 또는 git 레포 없음 → 새로 clone"
-                                rm -rf "${params.EC2_APP_DIR}"
-                                mkdir -p "${params.EC2_APP_DIR}"
-                                cd "${params.EC2_APP_DIR}"
-                                git clone https://github.com/${params.GITHUB_USERNAME}/deploy_guest_aws_script.git .
-                                
-                                #echo "[EC2] 기존 git 레포 존재 → clean fetch & reset"
-                                #cd "${params.EC2_APP_DIR}"
-                                #git fetch --all
-                                #git reset --hard origin/${params.GIT_BRANCH}
-                                #git clean -fd
-                            fi
-
+                            rm -rf "${params.EC2_APP_DIR}"
+                            mkdir -p "${params.EC2_APP_DIR}"
+                            cd "${params.EC2_APP_DIR}"
+                            git clone https://github.com/${params.GITHUB_USERNAME}/deploy_guest_aws_script.git .
+                           
                             echo "[EC2] 현재 디렉토리:"
                             pwd
 
