@@ -124,7 +124,7 @@ pipeline {
             }
         }
     }
-    /*
+    
     post {
         success {
             echo "✅ EC2 배포 성공!"
@@ -133,5 +133,5 @@ pipeline {
             echo "❌ EC2 배포 실패. 콘솔 로그를 확인하세요."
         }
     }
-    */
+    
 }
