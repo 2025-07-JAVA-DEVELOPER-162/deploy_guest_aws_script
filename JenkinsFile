@@ -28,7 +28,7 @@ pipeline {
         // Jenkins → Credentials → SSH Username with private key
         EC2_SSH_CREDENTIALS   = 'deploy-ssh-key'
         // Jenkins → Credentials → Username with password (DockerHub 로그인용)
-        DOCKERHUB_CREDENTIALS = 'dockerhub-cred'
+        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials'
     }
     stages {
         /***********************
