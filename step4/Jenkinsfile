@@ -88,12 +88,13 @@ EOF
                     }
                 }
             }
-        }
-        stage('Green 자동배포 시작') {
-            steps {
-                input message: '자동배포 시작', ok: "Yes"
+            stage('Green 자동배포 시작') {
+                steps {
+                    input message: '자동배포 시작', ok: "Yes"
+                }
             }
         }
+        
         
         post {
             success {
