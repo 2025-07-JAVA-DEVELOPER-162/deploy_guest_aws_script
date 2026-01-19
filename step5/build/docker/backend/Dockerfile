@@ -7,13 +7,13 @@ COPY gradlew .
 COPY build.gradle* settings.gradle* gradle.properties* ./
 RUN chmod +x ./gradlew
 
-COPY guest_backend/src src
+COPY src src
 RUN ./gradlew clean bootJar -x test --no-daemon
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
-ENV SPRING_PROFILES_ACTIVE=oracle-dev-group
+ENV SPRING_PROFILES_ACTIVE=mysql-prod-group
 ENTRYPOINT ["sh","-c","java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -jar /app/app.jar"]
 
 
