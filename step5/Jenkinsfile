@@ -95,8 +95,8 @@ pipeline {
                 {
                 sh '''
                     pwd
-ls -al
-ls -al guest_backend || true                 
+                    ls -al
+                    ls -al guest_backend || true                 
                     docker build  -t "${DOCKERHUB_USER}/guest-backend" ./${STEP_NUM}/build/docker/backend
                     #docker build  -t "${DOCKERHUB_USER}/guest-frontend" ./${STEP_NUM}/build/docker/frontend
 
