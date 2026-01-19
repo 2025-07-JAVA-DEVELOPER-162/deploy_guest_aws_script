@@ -82,8 +82,9 @@ pipeline {
                checkout scmGit(
                         branches: [[name: '*/main']],
                         extensions: [[$class: 'SparseCheckoutPaths',
-                                     sparseCheckoutPaths: [[path: "/${STEP_NUM}"]]]],
-                                     userRemoteConfigs: [[url: "${GITHUB_SCRIPT_URL}"]]
+                                     sparseCheckoutPaths: [[path: "${STEP_NUM}/"]]]],
+                                     userRemoteConfigs: [[url: "${GITHUB_SCRIPT_URL}",
+                                     credentialsId: env.GITHUB_CREDENTIALS]]
                         )
                 echo "==== Git Checkout 완료 ===="
 
@@ -97,12 +98,14 @@ pipeline {
                     pwd
                     ls -al
                     ls -al guest_backend || true                 
-                    docker build  -t "${DOCKERHUB_USER}/guest-backend" ./${STEP_NUM}/build/docker/backend
-                    #docker build  -t "${DOCKERHUB_USER}/guest-frontend" ./${STEP_NUM}/build/docker/frontend
+                     # ✅ Dockerfile은 step2에, 빌드 컨텍스트는 guest_backend로
+                    docker build \
+                    -t "${DOCKERHUB_USER}/guest-backend" \
+                    -f "./${STEP_NUM}/build/docker/backend/Dockerfile" \
+                    guest_backend
 
                     echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USER}" --password-stdin
                     docker push "${DOCKERHUB_USER}/guest-backend"
-                    #docker push "${DOCKERHUB_USER}/guest-frontend"
                     docker logout
                 '''
                 }
