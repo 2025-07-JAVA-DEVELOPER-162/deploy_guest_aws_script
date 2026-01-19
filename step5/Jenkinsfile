@@ -35,22 +35,10 @@ pipeline {
         /***********************
          * 1. 소스 체크아웃 & Gradle 빌드
          ***********************/
-        stage('Source Build[/guest-backend]') {
+        stage('Source Build') {
             steps {
-               checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: "${GITHUB_SOURCE_URL}",
-                        credentialsId: env.GITHUB_CREDENTIALS
-                    ]],
-                    extensions: [
-                        [$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [
-                            [path: 'guest_backend/']
-                        ]]
-                    ]
-                ])
-              
+                git branch: 'main',
+                url: "${GITHUB_SOURCE_URL}"
             }
         }
         
