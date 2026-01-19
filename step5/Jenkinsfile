@@ -99,10 +99,7 @@ pipeline {
                     ls -al
                     ls -al guest_backend || true                 
                      # ✅ Dockerfile은 step2에, 빌드 컨텍스트는 guest_backend로
-                    docker build \
-                    -t "${DOCKERHUB_USER}/guest-backend" \
-                    -f "./${STEP_NUM}/build/docker/backend/Dockerfile" \
-                    guest_backend
+                    docker build -t "${DOCKERHUB_USER}/guest-backend" -f "./${STEP_NUM}/build/docker/backend/Dockerfile" guest_backend
 
                     echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USER}" --password-stdin
                     docker push "${DOCKERHUB_USER}/guest-backend"
